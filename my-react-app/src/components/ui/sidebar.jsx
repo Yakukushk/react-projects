@@ -5,7 +5,7 @@ import { PanelLeft } from "lucide-react"
 
 import { useIsMobile } from "src/components/hooks/use-mobile"
 import { cn } from "src/components/lib/utils"
-import { Button } from "src/components/ui/button"
+import { Button } from "components/ui/shadcn-io/code-block/button"
 import { Input } from "src/components/ui/input"
 import { Separator } from "src/components/ui/separator"
 import {

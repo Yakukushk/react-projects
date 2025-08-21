@@ -1,18 +1,25 @@
 import React, { useState } from 'react';
 import './App.css';
-import Header from './components/Header';
+
 import CoreConcept from './components/CoreConcept';
-import { CORE_CONCEPTS, EXAMPLES } from './data/data';
+
 import TabButton from './components/Tab';
+import Header from 'components/Header';
+import { CORE_CONCEPTS, EXAMPLES } from 'data/data';
+import CodeFragment from 'components/CodeFragment';
+
+type TopicType = 'components' | 'jsx' | 'props' | 'state';
 
 function App() {
-  const [selectedTopic, setSelectedTopic] = useState();
-  function handleSelect(selectedButton) {
+  const [selectedTopic, setSelectedTopic] = useState<TopicType>('components');
+  
+  function handleSelect(selectedButton: TopicType): void {
     // selectedButton => 'components', 'jsx', 'props', 'state'
     setSelectedTopic(selectedButton);
     // console.log(selectedTopic);
   }
 
+  console.log(EXAMPLES[selectedTopic]);
 
   return (
     <div className="container mx-auto">
@@ -21,8 +28,7 @@ function App() {
         <CoreConcept data={CORE_CONCEPTS} />
       </section>
       <section id="examples">
-          <h2>Examples</h2>
-          <menu>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
             <TabButton
               isSelected={selectedTopic === 'components'}
               onSelect={() => handleSelect('components')}
@@ -47,8 +53,11 @@ function App() {
             >
               State
             </TabButton>
-          </menu>
-          {selectedTopic && <p>{EXAMPLES[selectedTopic].description}</p>}
+          </div>
+          <div className="border-2 border-dotted border-gray-300 rounded-lg p-4 mt-4">
+            {selectedTopic && <p className="text-gray-500 dark:text-gray-400 text-xl text-center whitespace-pre-wrap">{EXAMPLES[selectedTopic].description}</p>}
+            {selectedTopic && <CodeFragment code={EXAMPLES[selectedTopic].code} />}
+          </div>
         </section>
     </div>
   );

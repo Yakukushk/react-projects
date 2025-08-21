@@ -1,5 +1,23 @@
+export interface CoreConcept {
+  image: string;
+  title: string;
+  description: string;
+}
 
-export const CORE_CONCEPTS = [
+export interface Example {
+  title: string;
+  description: string;
+  code: string;
+}
+
+export interface Examples {
+  components: Example;
+  jsx: Example;
+  props: Example;
+  state: Example;
+}
+
+export const CORE_CONCEPTS: CoreConcept[] = [
   {
     image: `https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRMi_sLP0R1Cu4Z8rHEdwpMPnIPilne5eq33kbYcXoY53UG4Up-3DUCeH87jOFB8MuWOoI&usqp=CAU`,
     title: 'Components',
@@ -26,7 +44,7 @@ export const CORE_CONCEPTS = [
   },
 ];
 
-export const EXAMPLES = {
+export const EXAMPLES: Examples = {
   components: {
     title: 'Components',
     description:
