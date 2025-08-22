@@ -1,10 +1,12 @@
 import { calculateInvestmentResults, formatter } from "../util/investment";
 
 export default function TableSummary({ input }) {
-  const result = calculateInvestmentResults(input);
+  const resultsData = calculateInvestmentResults(input);
   // hint
-  const totalInitialInvestment =
-    result[0].valueEndOfYear - result[0].interest - result[0].annualInvestment;
+  const initialInvestment =
+  resultsData[0].valueEndOfYear -
+    resultsData[0].interest -
+    resultsData[0].annualInvestment;
   return (
     <>
       <table id="result">
@@ -33,11 +35,11 @@ export default function TableSummary({ input }) {
                 <td>
                     {props.annualInvestment}
                 </td> */}
-          {result.map((item, index) => {
+          {resultsData.map((item) => {
             const totalInterest =
               item.valueEndOfYear -
               item.annualInvestment * item.year -
-              totalInitialInvestment;
+              initialInvestment;
             const totalAmount = item.valueEndOfYear - totalInterest;
             return (
               <tr key={item.year}>

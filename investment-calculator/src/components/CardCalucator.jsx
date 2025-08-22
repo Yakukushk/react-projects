@@ -8,7 +8,7 @@ const titleInput = [
 ]
 
 export default function CardCalculator({handleChange, userInput}) {
-
+console.log(userInput);
   return (
     <section id="user-input">
       <div className="input-group">
@@ -17,7 +17,7 @@ export default function CardCalculator({handleChange, userInput}) {
             <label htmlFor={item.id}>{item.title}</label>
             <input
               type="number"
-              value={userInput[item.id]}
+              value={Number(userInput[item.id])}
               id={item.id}
               required
               onChange={(event) => handleChange(item.id, event)}

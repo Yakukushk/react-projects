@@ -15,7 +15,7 @@ function App() {
   const handleChange = (inputIndex, event) => {
     setUserInput({
       ...userInput,
-      [inputIndex]: event.target.value,
+      [inputIndex]: Number(event.target.value),
     });
   };
 
