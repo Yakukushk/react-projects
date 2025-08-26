@@ -16,16 +16,16 @@ const Button = ({children, className, ...props}) => (
   </button>
 );
 
-const Input = ({className, ...props}) => (
+const Input = ({className, valid, ...props}) => (
   <input 
-    className={cn("w-full p-1 border-b-2 rounded-sm border-stone-300 bg-stone-200 text-stone-600 focus:outline-none focus:border-stone-600", className)} 
+    className={cn(`w-full p-1 border-b-2 rounded-sm border-stone-300 ${valid ? `bg-stone-200 ` : `bg-red-300` } text-stone-600 focus:outline-none focus:border-stone-600`, className)} 
     {...props}
   />
 );
 
-const Textarea = ({className, ...props}) => (
+const Textarea = ({className, valid, ...props}) => (
     <textarea 
-      className={cn("w-full p-1 border-b-2 rounded-sm border-stone-300 bg-stone-200 text-stone-600 focus:outline-none focus:border-stone-600", className)} 
+      className={cn(`w-full p-1 border-b-2 rounded-sm border-stone-300 ${valid ? `bg-stone-200 ` : `bg-red-300` } text-stone-600 focus:outline-none focus:border-stone-600`, className)} 
       {...props}
     />
   );
@@ -120,8 +120,8 @@ const ButtonDanger = ({children, className, ...props}) => (
 );
 
 
-const InputSearch = ({className, ...props}) => (
-  <input className={cn("w-64 px-2 py-1 rounded-sm bg-stone-200", className)} {...props} />
+const InputSearch = ({className, valid, ...props}) => (
+  <input className={cn(`w-64 px-2 py-1 rounded-sm ${valid ? `bg-stone-200 ` : `bg-red-600` }`, className)} {...props} />
 );
 
 
@@ -167,7 +167,7 @@ const SidebarList = ({children, className, ...props}) => (
 );
 
 const SidebarButton = ({children, className, ...props}) => (
-  <button className={cn("w-full text-left px-2 py-1 rounded-sm my-1 hover:text-stone-200 hover:bg-stone-800", className)} {...props}>
+  <button className={cn("w-auto text-left px-2 py-1 rounded-sm my-1 hover:text-stone-200 hover:bg-stone-800", className)} {...props}>
     {children}
   </button>
 );

@@ -1,16 +1,19 @@
+import { forwardRef } from "react";
 import { Label, Input, FormGroup, Textarea } from "../assets/tailwind-classes";
 
-export default function InputArea ({isTextArea, label, placeholder, ...props}) {
+const InputArea =  forwardRef(function InputArea ({isTextArea, label, placeholder, ...props}, ref) {
     return (
         <>
         <FormGroup>
             <Label>{label}</Label>
              {isTextArea === false ? (
-               <Input {...props} placeholder={placeholder}/>
+               <Input ref={ref} {...props} placeholder={placeholder}/>
              ) : (
-                <Textarea {...props} placeholder={placeholder}/>
+                <Textarea ref={ref} {...props} placeholder={placeholder}/>
              )}
         </FormGroup>
         </>
     );
-}
+});
+
+export default InputArea;
