@@ -213,3 +213,26 @@ header p {
     opacity: 0.5;
   }
 }
+
+/* Simple List Styling */
+ul, ol {
+  color: #e1eeeb;
+  padding-left: 1.5rem;
+  list-style-type: none;
+}
+
+ul li {
+  margin: 0.5rem 0;
+  padding: 0.5rem;
+  background: rgba(77, 248, 223, 0.1);
+  border-radius: 6px;
+  border-left: 3px solid #00eeff;
+}
+
+ol li {
+  margin: 0.5rem 0;
+  padding: 0.5rem;
+  background: rgba(70, 206, 190, 0.1);
+  border-radius: 6px;
+  border-left: 3px solid #46cebe;
+}
