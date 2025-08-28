@@ -1,7 +1,7 @@
 import { forwardRef } from "react";
 import { Button, SidebarButton, SidebarTitle, SidebarList, Sidebar, ListItem } from "../assets/tailwind-classes";
 
-const ProjectSideBar = forwardRef(function ProjectSideBar({onCreateProject, projects, onSelectedProject, selectedProjectId}, ref) {
+const ProjectSideBar = function ProjectSideBar({onCreateProject, projects, onSelectedProject, selectedProjectId}) {
     console.log(projects)
     return(
         <>
@@ -20,6 +20,6 @@ const ProjectSideBar = forwardRef(function ProjectSideBar({onCreateProject, proj
         </Sidebar>
         </>
     );
-});
+};
 
 export default ProjectSideBar

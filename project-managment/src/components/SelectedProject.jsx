@@ -29,7 +29,7 @@ export default function SelectedProject({ project, onDelete, onAddTask, onDelete
         <Text>{formattedDate}</Text>
         <TextPreserve>{project.description}</TextPreserve>
       </Header>
-      <Tasks tasks={tasks} onAddTask={onAddTask} onDeleteTask={onDeleteTask}/>
+      <Tasks tasks={tasks} onAdd={onAddTask} onDelete={onDeleteTask}/>
     </Container>
   );
 }

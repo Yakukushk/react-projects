@@ -21,12 +21,11 @@ function App() {
       }
       return {
         ...prev,
-        projects: [newTask, ...prev.tasks]
+        tasks: [newTask, ...prev.tasks]
       }
     })
   };
 
-  const handleDeleteTask = () => {};
 
   const handleAddProject = () => {
     setSelectedProject((prev) => {
@@ -69,6 +68,16 @@ function App() {
       };
     });
   };
+
+  const handleDeleteTask = (taskId) => {
+    setSelectedProject(prev => {
+      return {
+        ...prev,
+        tasks: prev.tasks.filter(task => task.taskId !== taskId)
+      }
+    })
+  }
+
   const handleCancel = () => {
     setSelectedProject((prev) => {
       return {
@@ -81,13 +90,20 @@ function App() {
   const selectedProject = selectedProjects.projects.find(
     (project) => project.id === selectedProjects.selectedProjectId
   );
+  
+  const selectedProjectTasks = selectedProjects.tasks.filter(
+    (task) => task.projectId === selectedProjects.selectedProjectId
+  );
+
+  console.log("Task", selectedProjectTasks.map(item => item.text));
+  
   let content = (
     <SelectedProject
       onAddTask={handleAddTask}
       onDeleteTask={handleDeleteTask}
       onDelete={() => handleDeleteProject(selectedProject.id)}
       project={selectedProject}
-      tasks={selectedProjects.tasks}
+      tasks={selectedProjectTasks}
     />
   );
 
@@ -96,7 +112,7 @@ function App() {
       <CreateProject onCancel={handleCancel} onSave={handleCreateProject} />
     );
   } else if (selectedProjects.selectedProjectId === undefined) {
-    content = <NoProjectedSelected OnCreateProject={handleAddProject} />;
+    content = <NoProjectedSelected onCreateProject={handleAddProject} />;
   }
   return (
     <>

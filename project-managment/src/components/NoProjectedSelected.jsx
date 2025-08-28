@@ -8,13 +8,13 @@ import {
 
 import logo from '../assets/no-projects.png'
 
-export default function NoProjectedSelected({OnCreateProject}) {
+export default function NoProjectedSelected({onCreateProject}) {
   return (
     <EmptyState>
       <EmptyStateImage src={logo} alt="No project selected" />
       <EmptyStateTitle>No Project Selected</EmptyStateTitle>
       <EmptyStateText>
-        <Button onClick={OnCreateProject}>Create new project</Button>
+        <Button onClick={onCreateProject}>Create new project</Button>
       </EmptyStateText>
     </EmptyState>
   );
