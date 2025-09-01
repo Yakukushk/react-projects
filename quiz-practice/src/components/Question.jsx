@@ -8,7 +8,8 @@ export default function Question({
   selectedAnswer,
   answerState,
   skipSelectAnswer,
-  quizComplete
+  quizComplete,
+  timer,
 }) {
   return (
     <div id="question">
@@ -17,8 +18,10 @@ export default function Question({
       ) : (
         <>
           <QuestionTimer
+            key={timer}
             timeout={10000}
-            onTimeout={skipSelectAnswer}
+            onTimeout={selectedAnswer === "" ? skipSelectAnswer : null}
+            mode={answerState}
           />
           <h2>{questionsText}</h2>
           <Answer
