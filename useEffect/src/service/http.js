@@ -9,6 +9,17 @@ export async function fetchAvailablePlaces() {
   return resData.places;
 }
 
+export async function fetchUsersPlaces() {
+  const response = await fetch("http://localhost:3000/user-places");
+  const res = await response.json();
+
+  if(!response.ok){
+    throw new Error("Something wrong");
+  }
+
+  return res.places;
+}
+
 export async function putAvailablePlaces(places) {
   const response = await fetch("http://localhost:3000/user-places", {
     method: "PUT",
@@ -23,5 +34,7 @@ export async function putAvailablePlaces(places) {
   if (!response.ok) {
     throw new Error("Something wrong");
   }
+
+  console.log(resData.message)
   return resData.message;
 }

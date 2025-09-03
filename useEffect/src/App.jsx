@@ -1,78 +1,79 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 
 import Places from "./components/Places.jsx";
-import { AVAILABLE_PLACES } from "./data.js";
 import Modal from "./components/Modal.jsx";
 import DeleteConfirmation from "./components/DeleteConfirmation.jsx";
 import logoImg from "./assets/logo.png";
-import { sortPlacesByDistance } from "./loc.js";
 import Error from "./components/Error.jsx";
+import { fetchAvailablePlaces, fetchUsersPlaces } from "./service/http.js";
 import {
-  fetchAvailablePlaces,
-  putAvailablePlaces,
-} from "./service/http.js";
+  useAvailablePlaces,
+  useFetching,
+  usePutAvailablePlaces,
+} from "./hooks/useFetch.js";
 
 function App() {
   const modal = useRef();
   const selectedPlace = useRef();
-  const [pickedPlaces, setPickedPlaces] = useState([]);
-  const [availablePlaces, setAvailablePlaces] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
   const [openModal, setOpenModal] = useState(false);
-  const [error, setError] = useState();
+  const [errorUpdating, setErrorUpdating] = useState();
 
-  useEffect(() => {
-    // async function fetchPlaces() {
-    //   await fetch("http://localhost:3000/places")
-    //     .then((response) => {
-    //       setIsLoading(true);
-    //       if (!response.ok) {
-    //         throw new Error("Failed fetching data");
-    //       }
-    //       return response.json();
-    //     })
-    //     .then((resData) => {
-    //       setAvailablePlaces(resData.places);
-    //       setIsLoading(false);
-    //     })
-    //     .catch((error) => setError({message: error.message || 'Fail Fetch'}))
-    //     .finally(() => setIsLoading(false));
-    // }
-    async function fetchPlaces() {
-      try {
-        const availablePlace = await fetchAvailablePlaces();
+  const { fetchData: pickedPlaces, setFetchData } =
+    useFetching(fetchUsersPlaces);
+  const { availablePlaces, isLoading, errorFetch } =
+    useAvailablePlaces(fetchAvailablePlaces);
 
-        navigator.geolocation.getCurrentPosition((position) => {
-          const sortPlaces = sortPlacesByDistance(
-            availablePlace,
-            position.coords.latitude,
-            position.coords.longitude
-          );
-          setAvailablePlaces(sortPlaces);
-          setIsLoading(false);
-        });
-      } catch (error) {
-        setError({ message: error.message || "Fail Fetch" });
-      }
-    }
-    fetchPlaces();
-  }, []);
+  const { 
+    putPlace } = usePutAvailablePlaces(setFetchData, setErrorUpdating);
 
-  if (error) {
+  //#region
+  // useEffect(() => {
+  // //   //#region
+  // //   // async function fetchPlaces() {
+  // //   //   await fetch("http://localhost:3000/places")
+  // //   //     .then((response) => {
+  // //   //       setIsLoading(true);
+  // //   //       if (!response.ok) {
+  // //   //         throw new Error("Failed fetching data");
+  // //   //       }
+  // //   //       return response.json();
+  // //   //     })
+  // //   //     .then((resData) => {
+  // //   //       setAvailablePlaces(resData.places);
+  // //   //       setIsLoading(false);
+  // //   //     })
+  // //   //     .catch((error) => setError({message: error.message || 'Fail Fetch'}))
+  // //   //     .finally(() => setIsLoading(false));
+  // //   // }
+  // //   //#endregion
+  //   async function fetchPlaces() {
+  //       const availablePlace = await fetchAvailablePlaces();
+
+  //       // const {fetchData: availablePlace, setFetchData: setAvailablePlaces} = useFetching(fetchAvailablePlaces);
+
+  //       return new Promise((resolve, reject) => {
+  //         navigator.geolocation.getCurrentPosition((position) => {
+  //           const sortPlaces = sortPlacesByDistance(
+  //             availablePlace,
+  //             position.coords.latitude,
+  //             position.coords.longitude
+  //           );
+  //           setAvailablePlaces(sortPlaces);
+  //           setIsLoading(false);
+  //           resolve(sortPlaces);
+  //         });
+  //       }).catch((error) => {
+  //         setError({ message: error.message || "Fail Fetch" });
+  //         reject(error);
+  //       });
+  //   }
+  //   fetchPlaces();
+  // }, []);
+  //#endregion
+
+  if (errorFetch) {
     return <Error title="Error" message={error.message} />;
   }
-
-  useEffect(() => {
-    const storagePlaces =
-      JSON.parse(localStorage.getItem("selectedPlace")) || [];
-    const sortedPlaces = storagePlaces.map((placeId) => {
-      return availablePlaces.find(
-        (availablePlace) => availablePlace.id === placeId
-      );
-    });
-
-    setPickedPlaces(sortedPlaces);
-  }, []);
 
   function handleStartRemovePlace(id) {
     // modal.current.open();
@@ -86,7 +87,7 @@ function App() {
   }
 
   async function handleSelectPlace(id) {
-    setPickedPlaces((prevPickedPlaces) => {
+    setFetchData((prevPickedPlaces) => {
       if (!prevPickedPlaces) {
         prevPickedPlaces = [];
       }
@@ -97,6 +98,7 @@ function App() {
       return [place, ...prevPickedPlaces];
     });
 
+    //#region
     // const storagePlaces =
     //   JSON.parse(localStorage.getItem("selectedPlaces")) || [];
     // if (storagePlaces.indexOf(id === -1)) {
@@ -105,30 +107,64 @@ function App() {
     //     JSON.stringify([id, ...storagePlaces])
     //   );
     // }
-    try {
-      await putAvailablePlaces([selectedPlace, ...pickedPlaces]);
-    } catch (error) {
-      setError({ message: error.message || "Fail Fetch" });
-    }
+    //#endregion
+    // try {
+    //   await putAvailablePlaces([selectedPlace, ...pickedPlaces]);
+    // } catch (error) {
+    //   setFetchData((prev) => [...prev]);
+    //   setErrorUpdating({ message: error.message || "Fail Updating" });
+    // }
+    await putPlace(
+      [selectedPlace, ...pickedPlaces]
+    );
   }
 
-  const handleRemovePlace = useCallback(function handleRemovePlace() {
-    setPickedPlaces((prevPickedPlaces) =>
-      prevPickedPlaces.filter((place) => place.id !== selectedPlace.current)
-    );
-    // modal.current.close();
-    setOpenModal(false);
+  const handleRemovePlace = useCallback(
+    async function handleRemovePlace() {
+      setFetchData((prevPickedPlaces) =>
+        prevPickedPlaces.filter((place) => place.id !== selectedPlace.current)
+      );
 
-    const storagePlaces =
-      JSON.parse(localStorage.getItem("selectedPlaces")) || [];
-    localStorage.setItem(
-      "selectedPlaces",
-      JSON.stringify(storagePlaces.filter((id) => id !== selectedPlace.current))
-    );
-  }, []);
+      // modal.current.close();
+      setOpenModal(false);
+
+
+      //#region 
+      // const storagePlaces =
+      //   JSON.parse(localStorage.getItem("selectedPlaces")) || [];
+      // localStorage.setItem(
+      //   "selectedPlaces",
+      //   JSON.stringify(storagePlaces.filter((id) => id !== selectedPlace.current))
+      // );
+
+      // try {
+      //   await putAvailablePlaces(
+      //     pickedPlaces.filter((place) => place.id !== selectedPlace.current)
+      //   );
+      // } catch (error) {
+      //   setFetchData(pickedPlaces);
+      //   setErrorUpdating({ message: error.message || "Fail Updating" });
+      // }
+      //#endregion
+
+      await putPlace(
+        pickedPlaces.filter((place) => place.id !== selectedPlace.current)
+      );
+    },
+    [pickedPlaces, setFetchData]
+  );
 
   return (
     <>
+      <Modal open={errorUpdating} onClose={() => setErrorUpdating(null)}>
+        {errorUpdating && (
+          <Error
+            title={"An error occurred!"}
+            message={errorUpdating.message}
+            onConfirm={() => setErrorUpdating(null)}
+          />
+        )}
+      </Modal>
       <Modal ref={modal} open={openModal} onClose={handleStopRemovePlace}>
         <DeleteConfirmation
           onCancel={handleStopRemovePlace}
