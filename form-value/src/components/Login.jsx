@@ -1,18 +1,26 @@
 import { useRef, useState } from "react";
 
 export default function Login() {
-  const email = useRef('');
-  const password = useRef('');
+  const email = useRef("");
+  const password = useRef("");
+  const [emailInValid, setEmailInvalid] = useState(false);
 
-  // const handleChange = (identifier, event) => {
-  //   setFormInput((prev) => ({
-  //     ...prev,
-  //     [identifier]: event.target.value,
-  //   }));
-  // };
   const handleSubmit = (event) => {
     event.preventDefault();
-    console.log("Submitted " + email.current.value + " " + password.current.value);
+
+    const emailEntered = email.current.value;
+
+    const emailValid = emailEntered.includes("@");
+
+    if (!emailValid) {
+      setEmailInvalid(true);
+      return;
+    }
+
+    setEmailInvalid(false);
+    console.log(
+      "Submitted " + email.current.value + " " + password.current.value
+    );
   };
   return (
     <form onSubmit={handleSubmit}>
@@ -23,11 +31,15 @@ export default function Login() {
           <label htmlFor="email">Email</label>
           <input
             ref={email}
+            required
             id="email"
             type="email"
             name="email"
             value={email.current.value}
           />
+          <div className="control-error">
+            {emailInValid && <p>Invalid Email</p>}
+          </div>
         </div>
 
         <div className="control no-margin">
@@ -35,9 +47,11 @@ export default function Login() {
           <input
             id="password"
             ref={password}
+            required
             type="password"
             name="password"
             value={password.current.value}
+            minLength={4}
           />
         </div>
       </div>

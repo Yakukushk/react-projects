@@ -1,27 +1,6 @@
-import { useState } from "react";
-
 export default function Signup() {
-  const [passwordAreNotEqual, setPasswordsAreNotEqual] = useState(false);
-
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const fd = new FormData(event.target);
-    const data = Object.fromEntries(fd.entries());
-    const acquisition = fd.getAll("acquisition");
-    data.acquisition = acquisition;
-
-    if (data.password !== data["confirm-password"]) {
-      setPasswordsAreNotEqual(true);
-      return;
-    }
-    console.log(data);
-  };
-
-  const handleReset = (event) => {
-    event.target.reset();
-  };
   return (
-    <form onSubmit={handleSubmit}>
+    <form>
       <h2>Welcome on board!</h2>
       <p>We just need a little bit of data from you to get you started 🚀</p>
 
@@ -43,9 +22,6 @@ export default function Signup() {
             type="password"
             name="confirm-password"
           />
-          <div className="control-error">
-            {passwordAreNotEqual && <p>Passwords are not equal</p>}
-          </div>
         </div>
       </div>
 
@@ -110,16 +86,10 @@ export default function Signup() {
       </div>
 
       <p className="form-actions">
-        <button
-          type="reset"
-          onClick={handleReset}
-          className="button button-flat"
-        >
+        <button type="reset" className="button button-flat">
           Reset
         </button>
-        <button type="submit" className="button">
-          Sign up
-        </button>
+        <button className="button">Sign up</button>
       </p>
     </form>
   );
