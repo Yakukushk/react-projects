@@ -1,10 +1,18 @@
+import Header from "./components/Header";
+import Meals from "./components/Meals";
+import CartModal from "./components/modal/Cart";
+import { CartContextProvider } from "./store/cart.context";
+import { UserContextCart, UserProgressContextProvider } from "./store/userCart.context";
+
 function App() {
   return (
-    <>
-      <h1>You got this 💪</h1>
-      <p>Stuck? Not sure how to proceed?</p>
-      <p>Don't worry - we've all been there. Let's build it together!</p>
-    </>
+    <CartContextProvider>
+      <UserProgressContextProvider>
+        <Header />
+        <Meals />
+        {/* <CartModal/> */}
+      </UserProgressContextProvider>
+    </CartContextProvider>
   );
 }
 
