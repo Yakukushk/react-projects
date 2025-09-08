@@ -6,32 +6,39 @@ import { formatCurrency } from "../../util/formatting";
 import Button from "../UI/Button";
 import CartItem from "../CartItem";
 
-export default function CartModal({ modal, ...props }) {
-  const cartCtx = use(CartContext);
+export default function CartModal({ modal, checkoutModal, ...props }) {
+  const { cartItems, onAddItem, onRemoveItem, totalCartItems } =
+    use(CartContext);
   const userCtx = use(UserContextCart);
-
-  const totalCartItems = cartCtx.cartItems.items.reduce((total, item) => {
-    return total + item.quantity * item.price;
-  }, 0);
 
   function handleCloseCart() {
     userCtx.hideCart();
     modal.current.close();
   }
   function handleCheckout() {
+    modal.current.close();
     userCtx.showCheckout();
+    // Small delay to ensure cart modal closes before checkout opens
+    setTimeout(() => {
+      checkoutModal.current.open();
+    }, 100);
   }
+
+  if (userCtx.progress !== "cart") {
+    return null;
+  }
+
   return (
     <Modal {...props} ref={modal} className="cart" title="Your Cart">
       <ul>
-        {cartCtx.cartItems.items.map((item) => (
+        {cartItems.items.map((item) => (
           <CartItem
             key={item.id}
             name={item.name}
             quantity={item.quantity}
             price={item.price}
-            onAdd={() => cartCtx.onAddItem(item.id)}
-            onRemove={() => cartCtx.onRemoveItem(item.id)}
+            onAdd={() => onAddItem(item.id)}
+            onRemove={() => onRemoveItem(item.id)}
           />
         ))}
       </ul>
@@ -39,7 +46,9 @@ export default function CartModal({ modal, ...props }) {
       <Button textOnly onClick={handleCloseCart}>
         Close
       </Button>
-      <Button onClick={handleCheckout}>Go to Checkout</Button>
+      {cartItems.items.length > 0 ? (
+        <Button onClick={handleCheckout}>Go to Checkout</Button>
+      ) : null}
     </Modal>
   );
 }

@@ -10,7 +10,7 @@ export default function MealItem({ meal, onAddCart }) {
           <h3>{meal.name}</h3>
           <p className="meal-item-description">{meal.description}</p>
           <p className="meal-item-price">
-            ${formatCurrency.format(meal.price)}
+            {formatCurrency.format(meal.price)}
           </p>
         </div>
         <p className="meal-item-actions">

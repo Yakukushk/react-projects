@@ -12,9 +12,7 @@ export const Modal = forwardRef(function CartModal(
   useImperativeHandle(ref, () => {
     return {
       open: () => {
-        if (userCtx.progress === "cart") {
-          dialog.current.showModal();
-        }
+        dialog.current.showModal();
       },
       close: () => {
         dialog.current.close();
