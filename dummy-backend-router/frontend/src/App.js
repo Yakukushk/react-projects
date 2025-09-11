@@ -19,9 +19,62 @@
 //    Every list item should include a link to the respective EventDetailPage
 // 7. Output the ID of the selected event on the EventDetailPage
 // BONUS: Add another (nested) layout route that adds the <EventNavigation> component above all /events... page components
+import { createBrowserRouter, RouterProvider } from "react-router";
+import HomePage from "./pages/HomePage";
+import EventDetailPage, {
+  action as eventDeleteAction,
+  loader as eventDetailLoader,
+} from "./pages/EventDetailPage";
+import EventsPage, { loader as eventLoader} from "./pages/EventsPage";
+import NewEventPage, { action as eventAction } from "./pages/NewEventPage";
+import EditEventPage from "./pages/EditEventPage";
+import RootLayout from "./pages/RootLayout";
+import EventLayout from "./pages/EventLayout";
+import ErrorPage from "./pages/ErrorPage";
+import NewsletterPage, { action as newsletterAction } from './pages/Newsletter';
 
 function App() {
-  return <div></div>;
+  const router = createBrowserRouter([
+    {
+      path: "/",
+      element: <RootLayout />,
+      errorElement: <ErrorPage />,
+      children: [
+        { index: true, element: <HomePage /> },
+        {
+          path: "/events",
+          element: <EventLayout />,
+          children: [
+            {
+              index: true,
+              element: <EventsPage />,
+              loader: eventLoader,
+            },
+            {
+              path: ":id",
+              id: 'event-detail',
+              loader: eventDetailLoader,
+              children: [
+                {
+                  index: true,
+                  element: <EventDetailPage />,
+                  action: eventDeleteAction
+                },
+                { path: "edit", element: <EditEventPage />, action: eventAction },
+              ],
+            },
+            { path: "new", element: <NewEventPage />, action: eventAction },
+          ],
+        },
+        {
+          path: 'newsletter',
+          element: <NewsletterPage />,
+          action: newsletterAction,
+        },
+      ],
+    },
+  ]);
+  return <RouterProvider router={router} />;
 }
 
 export default App;
