@@ -1,28 +1,49 @@
-import { RouterProvider, createBrowserRouter } from 'react-router-dom';
+import {
+  RouterProvider,
+  createBrowserRouter,
+  redirect,
+} from "react-router-dom";
 
-import EditEventPage from './pages/EditEvent';
-import ErrorPage from './pages/Error';
+import EditEventPage from "./pages/EditEvent";
+import ErrorPage from "./pages/Error";
 import EventDetailPage, {
   loader as eventDetailLoader,
   action as deleteEventAction,
-} from './pages/EventDetail';
-import EventsPage, { loader as eventsLoader } from './pages/Events';
-import EventsRootLayout from './pages/EventsRoot';
-import HomePage from './pages/Home';
-import NewEventPage from './pages/NewEvent';
-import RootLayout from './pages/Root';
-import { action as manipulateEventAction } from './components/EventForm';
-import NewsletterPage, { action as newsletterAction } from './pages/Newsletter';
+} from "./pages/EventDetail";
+import EventsPage, { loader as eventsLoader } from "./pages/Events";
+import EventsRootLayout from "./pages/EventsRoot";
+import HomePage from "./pages/Home";
+import NewEventPage from "./pages/NewEvent";
+import RootLayout, { getTokeDuration } from "./pages/Root";
+import { action as manipulateEventAction } from "./components/EventForm";
+import NewsletterPage, { action as newsletterAction } from "./pages/Newsletter";
+import Authentication, { action as authAction } from "./pages/Authentication";
+import { action as actionLogout } from "./pages/Logout";
 
 const router = createBrowserRouter([
   {
-    path: '/',
+    path: "/",
     element: <RootLayout />,
     errorElement: <ErrorPage />,
+    id: "root",
+    loader: () => {
+      const token = localStorage.getItem("token");
+
+      // if (!token) {
+      //   return;
+      // }
+
+      // const tokenDuration = getTokeDuration();
+      // if (tokenDuration < 0) {
+      //   return "EXPIRED";
+      // }
+      return token;
+    },
     children: [
       { index: true, element: <HomePage /> },
+      { path: "auth", element: <Authentication />, action: authAction },
       {
-        path: 'events',
+        path: "events",
         element: <EventsRootLayout />,
         children: [
           {
@@ -31,8 +52,8 @@ const router = createBrowserRouter([
             loader: eventsLoader,
           },
           {
-            path: ':eventId',
-            id: 'event-detail',
+            path: ":eventId",
+            id: "event-detail",
             loader: eventDetailLoader,
             children: [
               {
@@ -41,23 +62,33 @@ const router = createBrowserRouter([
                 action: deleteEventAction,
               },
               {
-                path: 'edit',
+                path: "edit",
                 element: <EditEventPage />,
                 action: manipulateEventAction,
+                loader: () => {
+                  const token = localStorage.getItem("token");
+                  if (!token) {
+                    return redirect("/auth");
+                  }
+                },
               },
             ],
           },
           {
-            path: 'new',
+            path: "new",
             element: <NewEventPage />,
             action: manipulateEventAction,
           },
         ],
       },
       {
-        path: 'newsletter',
+        path: "newsletter",
         element: <NewsletterPage />,
         action: newsletterAction,
+      },
+      {
+        path: "logout",
+        action: actionLogout,
       },
     ],
   },
