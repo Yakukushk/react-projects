@@ -1,11 +1,16 @@
-import Link from 'next/link';
-import Image from 'next/image';
+"use client";
 
-import MainHeaderBackground from './main-header-background';
-import logoImg from '@/assets/logo.png';
-import classes from './main-header.module.css';
+import Link from "next/link";
+import Image from "next/image";
+
+import MainHeaderBackground from "./main-header-background";
+import logoImg from "@/assets/logo.png";
+import classes from "./main-header.module.css";
+import { usePathname } from "next/navigation";
+import NavLink from "./nav-link";
 
 export default function MainHeader() {
+  const path = usePathname();
   return (
     <>
       <MainHeaderBackground />
@@ -17,12 +22,7 @@ export default function MainHeader() {
 
         <nav className={classes.nav}>
           <ul>
-            <li>
-              <Link href="/meals">Browse Meals</Link>
-            </li>
-            <li>
-              <Link href="/community">Foodies Community</Link>
-            </li>
+            <NavLink classes={classes} />
           </ul>
         </nav>
       </header>

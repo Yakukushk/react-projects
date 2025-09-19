@@ -38,6 +38,18 @@ export default function ImageSlideshow() {
 
   return (
     <div className={classes.slideshow}>
+      <div style={{ 
+        position: 'absolute', 
+        top: '10px', 
+        left: '10px', 
+        background: 'rgba(0,0,0,0.8)', 
+        color: 'white', 
+        padding: '10px', 
+        zIndex: 1000,
+        fontSize: '12px'
+      }}>
+        Debug: {currentImageIndex + 1}/{images.length}
+      </div>
       {images.map((image, index) => (
         <Image
           key={index}
@@ -46,6 +58,14 @@ export default function ImageSlideshow() {
           height={400}
           className={index === currentImageIndex ? classes.active : ''}
           alt={image.alt}
+          priority={index === 0}
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            opacity: index === currentImageIndex ? 1 : 0,
+            transition: 'opacity 0.5s ease-in-out'
+          }}
         />
       ))}
     </div>

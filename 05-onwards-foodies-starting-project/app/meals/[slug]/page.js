@@ -1,7 +1,57 @@
-export default function MealPage({params}) {
-   return (
+import Image from "next/image";
+import classes from "./page.module.css";
+import { getMeal } from "@/lib/meals";
+import { notFound } from "next/navigation";
+import DeleteButton from "@/components/meals/deleteButton";
+
+// export async function Meal(slug) {
+//     const {meal} = getMeal(slug);
+// }
+export async function generateMetadata({params}) {
+  const { slug } = await params;
+  console.log(slug);
+  const { meal } = await getMeal(slug);
+  if(!meal) {
+    notFound();
+  }
+  return {
+      title: meal.title,
+      description: meal.description
+  }
+}
+export default async function MealPage({ params }) {
+  const { slug } = await params;
+  console.log(slug);
+  const { meal } = await getMeal(slug);
+  console.log(meal);
+
+  if (!meal) {
+    notFound();
+  }
+  meal.instructions = meal.instructions.replace(/\n/g, "<br />");
+  return (
     <>
-    <h1>MealPage - {params.slug}</h1>
+      <header className={classes.header}>
+        <div className={classes.image}>
+          <Image src={meal.image} alt={meal.title} fill />
+        </div>
+        <div className={classes.headerText}>
+          <h1>{meal.title}</h1>
+          <p className={classes.creator}>
+            by <a href={`mailto:${meal.creator_email}`}>{meal.creator}</a>
+          </p>
+          <p className={classes.summary}>{meal.summary}</p>
+        </div>
+      </header>
+      <main>
+        <p
+          className={classes.instructions}
+          dangerouslySetInnerHTML={{ __html: meal.instructions }}
+        />
+      </main>
+      <footer>
+        <DeleteButton classes={classes} meal={meal} />
+      </footer>
     </>
-   )
+  );
 }
